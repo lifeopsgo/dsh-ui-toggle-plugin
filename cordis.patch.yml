@@ -1,0 +1,8 @@
+# dsh bundle patch: inserts this plugin's Host half into a profile's layer
+# stack. The Host half is an empty apply — the whole plugin lives in the Client
+# half (Settings section + sidebar chrome effects), discovered through the
+# package's `dsh.client` manifest and loaded into the Web GUI.
+- insert:
+    - id: dsh-ui-toggle-plugin
+      name: 'dsh-ui-toggle-plugin'
+      config: { global: {}, projects: {}, sessions: {} }

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "UI toggle",
+    "description": "Six live switches in Settings for the DSH WebUI chrome: hide the sidebar brand area, keep only the Settings button at the sidebar foot, lay the global panel icons out horizontally, hide the New Session and collapse-sidebar buttons, and hide the composer placeholder."
+  }
+}

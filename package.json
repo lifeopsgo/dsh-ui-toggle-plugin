@@ -1,0 +1,77 @@
+{
+  "name": "dsh-ui-toggle-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DSH WebUI chrome switches as one Settings section: hide or reshape the sidebar brand, account menu, panel layout, New Session and collapse buttons, and the composer placeholder — applied live without a reload.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "ui",
+    "settings"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "LICENSE",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit",
+    "test": "node --test --experimental-strip-types \"test/**/*.test.ts\""
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-settings-general"
+      ],
+      "platform": "web"
+    }
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-client-locale": "0.2.0-rc.1 || 0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.2.0-rc.1 || 0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-settings-general": "0.2.0-rc.1 || 0.2.1-rc.2",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-client-locale": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-settings-general": "0.2.1-rc.2",
+    "@types/node": "^26.4.0",
+    "@types/react": "^18.3.31",
+    "react": "18.3.1",
+    "tsdown": "^0.22.14",
+    "typescript": "^7.0.2"
+  }
+}
