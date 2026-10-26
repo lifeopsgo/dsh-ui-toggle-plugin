@@ -47,6 +47,8 @@ export function UiToggleSection(props: SectionProps): ReactElement {
   // `latest` holds the values the plugin last wrote. React state drives the
   // render; this ref exists because a second flip can arrive before that state
   // has been committed, and the flip must build on the write it already made.
+  // It is populated lazily so readPrefs runs once per mount, not once per
+  // render, and re-mounting the section re-reads whatever the chrome applies.
   const latest = useRef<UiPrefs | null>(null)
   if (latest.current === null) latest.current = readPrefs()
   const [prefs, setPrefs] = useState<UiPrefs>(latest.current)
@@ -58,7 +60,7 @@ export function UiToggleSection(props: SectionProps): ReactElement {
     // survived, which the browser run showed. The ref is written
     // synchronously here, OUTSIDE the state updater, so the persist stays one
     // side effect per click.
-    const current = latest.current as UiPrefs
+    const current = latest.current ?? readPrefs()
     const next = { ...current, [key]: !current[key] }
     latest.current = next
     setPrefs(next)

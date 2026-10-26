@@ -124,17 +124,24 @@ export function seedFromLegacyPrefs(storage: PrefsStorage | undefined = defaultS
 }
 
 export function writePrefs(prefs: UiPrefs, storage: PrefsStorage | undefined = defaultStorage()): void {
-  // Notify BEFORE persisting. Two independent reasons:
-  // - A listener that throws must not cost durability: with this order the
-  //   blob is written afterwards, so a broken chrome subscriber cannot stop
-  //   the value from surviving a reload. (The reversed order would leave it
-  //   persisted-but-unapplied instead.)
-  // - A listener that reads the storage sees the OLD blob. No listener does
-  //   that today — `installChrome` applies the prefs object it is handed — but
-  //   the ordering makes that contract explicit.
-  // A throwing storage is handled by the catch below, so it never strands the
-  // flipped switch: the chrome has already been notified by then.
-  for (const listener of prefListeners) listener(prefs)
+  // Notify BEFORE persisting, and isolate each listener.
+  //
+  // The chrome subscriber walks the live DOM (it composes the CSS sheet off
+  // the prefs and touches shadow seats that the shell may have re-rendered
+  // away). A subscriber that throws is therefore a realistic case, and the
+  // order above would otherwise let it skip BOTH the remaining subscribers and
+  // the persist — the flip would neither apply nor survive a reload. Two
+  // guards close that: this try/catch per listener, and notifying before the
+  // write so a throwing listener cannot swallow a persist that has not run
+  // yet. A throwing storage is caught below instead, so the section's click
+  // handler always returns.
+  for (const listener of prefListeners) {
+    try {
+      listener(prefs)
+    } catch (error) {
+      console.warn('ui-toggle: a prefs listener failed:', error)
+    }
+  }
   if (storage === undefined) return
   try {
     storage.setItem(PREFS_KEY, JSON.stringify(prefs))

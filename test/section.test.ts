@@ -132,3 +132,41 @@ test('flipping several switches without a re-render keeps every earlier flip', {
     ;(globalThis as { localStorage?: unknown }).localStorage = originalStorage
   }
 })
+
+test('re-mounting the section shows what the chrome applies, not a stale snapshot', { skip: !available && 'needs the React 18 dispatcher' }, async () => {
+  const { writePrefs, DEFAULT_PREFS } = await import('../src/client/prefs.ts')
+  const originalStorage = (globalThis as { localStorage?: unknown }).localStorage
+
+  const freshStorage = (): unknown => {
+    const store = new Map<string, string>()
+    return {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+      removeItem: (k: string) => void store.delete(k),
+    }
+  }
+  try {
+    const t = (key: string): string => key
+
+    // Mount 1: a fresh store, every switch off.
+    ;(globalThis as { localStorage?: unknown }).localStorage = freshStorage()
+    const first = await renderSection({ t })
+    assert.deepEqual(first.findAll('dshui-switch').map(s => s.props['aria-checked']),
+      [false, false, false, false, false, false], 'a fresh store mounts with every switch off')
+
+    // The chrome flips values through the same single write path while the
+    // section is unmounted (the shell unmounts it whenever its nav row is
+    // inactive). The page must re-read them on the next mount — that is the
+    // contract the component header states.
+    writePrefs({ ...DEFAULT_PREFS, hideBrand: true, hideInputPlaceholder: true })
+
+    // Mount 2 (keepState=false clears the hook scopes, i.e. a fresh instance).
+    const second = await renderSection({ t })
+    const checked = second.findAll('dshui-switch').map(s => s.props['aria-checked'])
+    assert.equal(checked[0], true, 'the remounted section must show the persisted brand switch')
+    assert.equal(checked[5], true, 'the remounted section must show the persisted placeholder switch')
+    assert.equal(checked[1], false, 'untouched switches must still read off')
+  } finally {
+    ;(globalThis as { localStorage?: unknown }).localStorage = originalStorage
+  }
+})

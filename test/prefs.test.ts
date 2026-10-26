@@ -214,3 +214,33 @@ test('writePrefs notifies listeners before persisting, and a throwing storage de
     }
   }
 })
+
+test('a listener that throws neither blocks the persist nor the other listeners', async () => {
+  const { writePrefs, onPrefsChanged, readPrefs, DEFAULT_PREFS, PREFS_KEY } =
+    await import('../src/client/prefs.ts')
+  const { storage, store } = freshStore()
+
+  // The chrome subscriber walks the live DOM; a shadow seat that vanished
+  // mid-frame is a realistic reason for it to throw. A throwing subscriber
+  // must not cost durability: the blob is what a reload reads.
+  const boom = onPrefsChanged(() => { throw new Error('chrome apply blew up') })
+  const heard: unknown[] = []
+  const healthy = onPrefsChanged(p => heard.push(p))
+  const warned: unknown[][] = []
+  const originalWarn = console.warn
+  console.warn = (...args: unknown[]) => { warned.push(args) }
+  try {
+    const next = { ...DEFAULT_PREFS, hideBrand: true }
+    assert.doesNotThrow(() => { writePrefs(next, storage) },
+      'a throwing listener must not propagate into the section\'s click handler')
+    assert.ok(store.has(PREFS_KEY), 'a throwing listener must not stop the persist')
+    assert.deepEqual(readPrefs(storage), next, 'the persisted blob must carry the flip')
+    assert.deepEqual(heard, [next], 'the listeners after the throwing one must still run')
+    assert.equal(warned.length, 1, 'the throwing listener must be reported once')
+    assert.match(String(warned[0]?.[0] ?? ''), /prefs listener failed/, 'the warning must name the failing listener')
+  } finally {
+    boom()
+    healthy()
+    console.warn = originalWarn
+  }
+})
