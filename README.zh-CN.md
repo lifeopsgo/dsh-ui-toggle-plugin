@@ -5,7 +5,7 @@
 **把 DSH WebUI 的六个界面开关收进一个设置页。**
 
 [![platform](https://img.shields.io/badge/platform-DSH%20WebUI-2b7cd3?style=flat-square)](#快速开始)
-![tests](https://img.shields.io/badge/tests-35%20passing-3fb950?style=flat-square)
+![tests](https://img.shields.io/badge/tests-37%20passing-3fb950?style=flat-square)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 
 [English](./README.md) · **简体中文**
@@ -33,7 +33,7 @@
 
 | DSH 版本 | 状态 | 验证方式 |
 | --- | --- | --- |
-| 0.2.1-rc.2 | 支持 | Host 与 Client 类型检查、生产构建、35 项自动化测试、`--frozen-lockfile` 安装，以及真实 WebUI 上六个开关的端到端浏览器验证 |
+| 0.2.1-rc.2 | 支持 | Host 与 Client 类型检查、生产构建、37 项自动化测试、`--frozen-lockfile` 安装，以及真实 WebUI 上六个开关的端到端浏览器验证 |
 
 其他 DSH 版本不声明支持。
 
@@ -77,7 +77,7 @@ dsh plugin --profile web remove dsh-ui-toggle-plugin
 pnpm install
 pnpm typecheck   # host + client
 pnpm build       # lib/index.js（宿主 ESM）+ lib/client.js（ModuleLoader 信封）
-pnpm test        # 35 项测试，node --test
+pnpm test        # 37 项测试，node --test
 ```
 
 `lib/` 是刻意提交的：安装走 git tag，而 git 托管包只有让每个用户按哈希许可 `prepare` 脚本才会有构建步骤。

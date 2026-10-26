@@ -51,3 +51,11 @@ First release. The six DSH WebUI chrome switches, split out of
   value synchronously in a ref and flips off that, so every click accumulates.
   Caught by driving all six switches in a single browser tick; pinned by a
   regression test that flips six switches without an intervening re-render.
+
+- **A throwing chrome subscriber swallowed the whole flip.** `writePrefs`
+  notified listeners before persisting, but the loop had no per-listener
+  guard: one subscriber that threw skipped every later subscriber *and* the
+  `setItem`, leaving the flip neither applied nor durable. The chrome
+  subscriber walks the live DOM, so a throw is a realistic case. Each listener
+  now runs in its own try/catch with a warning, and the persist still follows
+  the notifications.

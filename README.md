@@ -5,7 +5,7 @@
 **Six live switches for the DSH WebUI chrome — in one Settings page.**
 
 [![platform](https://img.shields.io/badge/platform-DSH%20WebUI-2b7cd3?style=flat-square)](#quick-start)
-![tests](https://img.shields.io/badge/tests-35%20passing-3fb950?style=flat-square)
+![tests](https://img.shields.io/badge/tests-37%20passing-3fb950?style=flat-square)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 
 **English** · [简体中文](./README.zh-CN.md)
@@ -33,7 +33,7 @@ Built and verified against **DSH 0.2.1-rc.2** (peer range also admits `0.2.0-rc.
 
 | DSH version | Status | How it was checked |
 | --- | --- | --- |
-| 0.2.1-rc.2 | supported | Typechecks (host + client), production build, 35 automated tests, `--frozen-lockfile` install, and end-to-end browser verification of all six switches against a live WebUI |
+| 0.2.1-rc.2 | supported | Typechecks (host + client), production build, 37 automated tests, `--frozen-lockfile` install, and end-to-end browser verification of all six switches against a live WebUI |
 
 This release makes no compatibility claim for other DSH versions.
 
@@ -77,7 +77,7 @@ dsh plugin --profile web remove dsh-ui-toggle-plugin
 pnpm install
 pnpm typecheck   # host + client
 pnpm build       # lib/index.js (host ESM) + lib/client.js (ModuleLoader envelope)
-pnpm test        # 35 tests, node --test
+pnpm test        # 37 tests, node --test
 ```
 
 `lib/` is committed on purpose: installs come from a git tag, and a git-hosted package has no build step unless every user allows a `prepare` script by hash.
