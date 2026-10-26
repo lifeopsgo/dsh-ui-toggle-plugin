@@ -44,18 +44,23 @@ const passthrough: Translate = key => key
 
 export function UiToggleSection(props: SectionProps): ReactElement {
   const t = props.t ?? passthrough
-  const initial = useRef<UiPrefs>(readPrefs())
-  const [prefs, setPrefs] = useState<UiPrefs>(initial.current)
+  // `latest` holds the values the plugin last wrote. React state drives the
+  // render; this ref exists because a second flip can arrive before that state
+  // has been committed, and the flip must build on the write it already made.
+  const latest = useRef<UiPrefs | null>(null)
+  if (latest.current === null) latest.current = readPrefs()
+  const [prefs, setPrefs] = useState<UiPrefs>(latest.current)
   const flip = (key: SwitchKey): void => {
-    // Flip off the LAST write, not this render's snapshot: when several
-    // switches are flipped before React re-renders (a same-tick batch, or a
-    // future caller that flips more than one), every flip after the first
-    // would otherwise start from the stale value and overwrite the earlier
-    // ones — only the last switch survived, which the browser run showed. The
-    // ref is written synchronously here, OUTSIDE the state updater, so the
-    // persist stays a single side effect per click.
-    const next = { ...initial.current, [key]: !initial.current[key] }
-    initial.current = next
+    // Flip off the LAST write, not this render's snapshot: flipping several
+    // switches in one tick (all six at once, or a future caller flipping more
+    // than one) would otherwise start every flip after the first from the
+    // stale render value and overwrite the earlier ones — only the last switch
+    // survived, which the browser run showed. The ref is written
+    // synchronously here, OUTSIDE the state updater, so the persist stays one
+    // side effect per click.
+    const current = latest.current as UiPrefs
+    const next = { ...current, [key]: !current[key] }
+    latest.current = next
     setPrefs(next)
     writePrefs(next)
   }
