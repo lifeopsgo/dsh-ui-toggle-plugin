@@ -124,11 +124,16 @@ export function seedFromLegacyPrefs(storage: PrefsStorage | undefined = defaultS
 }
 
 export function writePrefs(prefs: UiPrefs, storage: PrefsStorage | undefined = defaultStorage()): void {
-  // Notify BEFORE persisting: the section flips its React state optimistically
-  // before calling here, so a storage that throws (Safari private mode, full
-  // quota) must not strand the flipped switch — the chrome would ignore what
-  // the section already shows. A failed persist only costs durability across
-  // reloads, which a warning makes visible.
+  // Notify BEFORE persisting. Two independent reasons:
+  // - A listener that throws must not cost durability: with this order the
+  //   blob is written afterwards, so a broken chrome subscriber cannot stop
+  //   the value from surviving a reload. (The reversed order would leave it
+  //   persisted-but-unapplied instead.)
+  // - A listener that reads the storage sees the OLD blob. No listener does
+  //   that today — `installChrome` applies the prefs object it is handed — but
+  //   the ordering makes that contract explicit.
+  // A throwing storage is handled by the catch below, so it never strands the
+  // flipped switch: the chrome has already been notified by then.
   for (const listener of prefListeners) listener(prefs)
   if (storage === undefined) return
   try {
