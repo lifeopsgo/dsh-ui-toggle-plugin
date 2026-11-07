@@ -8,7 +8,7 @@
 ![tests](https://img.shields.io/badge/tests-37%20passing-3fb950?style=flat-square)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 
-[English](./README.md) · **简体中文**
+[English](./README.en.md) · **简体中文**
 
 </div>
 
