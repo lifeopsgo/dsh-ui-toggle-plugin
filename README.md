@@ -1,5 +1,7 @@
 # dsh-ui-toggle-plugin
 
+[![中文](https://img.shields.io/badge/README-中文-red?style=flat-square)](./README.md) [![English](https://img.shields.io/badge/README-English-blue?style=flat-square)](./README.en.md) [![详细中文](https://img.shields.io/badge/README-详细中文-orange?style=flat-square)](./README.zh-CN.md)
+
 一个 DSH（DeepSeek Harness）网页界面插件：在「设置 → UI 开关」里提供六个界面开关，点完立刻生效，不用刷新、不用重启。
 
 ## 六个开关
