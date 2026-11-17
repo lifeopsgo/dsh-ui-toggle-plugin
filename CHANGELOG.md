@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-11-17
+
+### Fixed
+
+- **The hover pin no longer paints over the panel icon.** DSH 0.2.2 positions its unpin control absolutely in a 38px right gutter that only the wide row reserves; an icon-only row is 28px wide, so the 16px control covered 10px of the 16px icon — the badge looked like it floated on top of the glyph. Icon-only rows now drop the control, which is what the shell itself does in its collapsed rail (the row renders it only in the wide state). Unpin stays reachable by turning the switch off, and the switch's hint says so. Verified against a live 0.2.2-rc.3 instance: with the layout on, every row stays 28–34px and the control computes to `display:none`; with it off, the stock vertical rows and their 28px control come back.
+
 ## [1.2.0] - 2026-11-17
 
 ### Added

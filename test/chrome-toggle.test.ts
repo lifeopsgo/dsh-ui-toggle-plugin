@@ -139,7 +139,7 @@ test('the New Session, collapse-toggle and placeholder rules hide their own elem
   const buttonHides = hideRules.filter(rule => !spanRules.includes(rule) && !divRules.includes(rule))
   assert.ok(buttonHides.length >= 4, 'expected at least the four button-hide rules')
   for (const rule of buttonHides) {
-    assert.match(rule, /> button(:not\(:has\(\[data-slot\]\)\))?(:has\(\[data-slot="sidebar\.brand\.name"\]\))?\{display:none!important\}$/,
+    assert.match(rule, /> button(:not\(:has\(\[data-slot\]\)\)|:not\(:has\(> span\)\))?(:has\(\[data-slot="sidebar\.brand\.name"\]\))?\{display:none!important\}$/,
       `an outright hide must target a button or a structural div, never a slot anchor: ${rule}`)
   }
 })

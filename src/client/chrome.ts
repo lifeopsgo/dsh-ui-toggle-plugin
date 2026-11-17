@@ -334,12 +334,14 @@ nav:has(button [data-slot="sidebar.panellist"]){flex-direction:row!important;fle
 nav:has(button [data-slot="sidebar.panellist"]) > *{flex:0 0 auto!important;width:auto!important;min-width:0!important}
 nav:has(button [data-slot="sidebar.panellist"]) button:has(> span){width:auto!important;min-width:0!important;gap:0!important;padding:7px 6px!important;justify-content:center!important}
 nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:none!important}
-/* The hover-only unpin control is absolutely positioned in the wide row's
-   right gutter, which the icon-only row no longer reserves; left as-is it
-   would sit on top of the icon. Shrink it to a corner dot instead — the
-   unpin action stays reachable on hover, and hiding it would strand pinned
-   panels, since the More menu only offers PIN for unpinned entries. */
-nav:has(button [data-slot="sidebar.panellist"]) button:not(:has(> span)){width:16px!important;height:16px!important;top:0!important;right:0!important;border-radius:50%!important;background:var(--dsw-alias-bg-layer-1)!important;box-shadow:0 0 0 1px var(--dsw-alias-border-l2)!important}
+/* The wide row carries a hover-only unpin control, absolutely positioned in a
+   right gutter 38px wide. An icon-only row has no such gutter: at the stock
+   28px the control paints 10px of its 16px body over the 16px icon, which is
+   exactly what an "icons only" row must not do. Dropping the control is the
+   shell's own compact-state behaviour: the row renders it only in the wide
+   state, so the collapsed rail has no unpin either. Unpin stays reachable by turning
+   this switch off, which restores the stock wide rows and their gutter. */
+nav:has(button [data-slot="sidebar.panellist"]) > * > button:not(:has(> span)){display:none!important}
 [data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]){flex-direction:column!important;flex-wrap:nowrap!important;gap:12px!important}
 [data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) button:has(> span){padding:0!important;width:auto!important}
 [data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:inline!important}

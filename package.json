@@ -1,6 +1,6 @@
 {
   "name": "dsh-ui-toggle-plugin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "DSH WebUI chrome switches as one Settings section: hide or reshape the sidebar brand, account menu, panel layout, New Session and collapse buttons, and the composer placeholder — applied live without a reload.",
   "keywords": [
