@@ -315,13 +315,33 @@ const PANEL_CSS = `
    form must be used, the child-combinator form does not match the glyph span
    wrapper in between. !important is deliberate: the shipped rules live in a
    hash-scoped stylesheet whose cascade order relative to this injected sheet
-   is not guaranteed, so the override must not depend on it. */
+   is not guaranteed, so the override must not depend on it.
+
+   ICON-ONLY ROWS. The row markup changed across the 0.2.x line: older shells
+   put the row button directly in the nav and its label as the button's last
+   SPAN child; current shells wrap the button in an entry DIV and render the
+   label only in the wide state. Both shapes put the glyph — and with it the
+   stable [data-slot="sidebar.panellist"] anchor — inside a SPAN that is a
+   direct child of the row button, and the label in a sibling SPAN that is
+   not. Every rule below therefore (a) climbs from the anchor to the nav,
+   (b) selects row buttons by "has a direct-child SPAN" (the hover-only pin
+   button has none), and (c) hides the direct-child SPAN that neither is the
+   aria-hidden glyph nor carries the anchor. That combination is independent
+   of the entry wrapper, of the label's position among siblings, and of the
+   shipped hash-scoped class names. */
 nav:has(button [data-slot="sidebar.panellist"]){flex-direction:row!important;flex-wrap:wrap!important;align-items:center;gap:2px}
-nav:has(button [data-slot="sidebar.panellist"]) > button{gap:0!important;padding:7px 6px!important}
-nav:has(button [data-slot="sidebar.panellist"]) > button > span:last-child{display:none!important}
+nav:has(button [data-slot="sidebar.panellist"]) > *{flex:0 0 auto!important;width:auto!important;min-width:0!important}
+nav:has(button [data-slot="sidebar.panellist"]) button:has(> span){width:auto!important;min-width:0!important;gap:0!important;padding:7px 6px!important;justify-content:center!important}
+nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:none!important}
+/* The hover-only unpin control is absolutely positioned in the wide row's
+   right gutter, which the icon-only row no longer reserves; left as-is it
+   would sit on top of the icon. Shrink it to a corner dot instead — the
+   unpin action stays reachable on hover, and hiding it would strand pinned
+   panels, since the More menu only offers PIN for unpinned entries. */
+nav:has(button [data-slot="sidebar.panellist"]) button:not(:has(> span)){width:16px!important;height:16px!important;top:0!important;right:0!important;border-radius:50%!important;background:var(--dsw-alias-bg-layer-1)!important;box-shadow:0 0 0 1px var(--dsw-alias-border-l2)!important}
 [data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]){flex-direction:column!important;flex-wrap:nowrap!important;gap:12px!important}
-[data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) > button{padding:0!important}
-[data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) > button > span:last-child{display:inline!important}
+[data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) button:has(> span){padding:0!important;width:auto!important}
+[data-sidebar-collapsed="true"] nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:inline!important}
 `.trim()
 
 const NEW_SESSION_CSS = `

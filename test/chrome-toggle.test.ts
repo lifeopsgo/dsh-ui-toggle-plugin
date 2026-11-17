@@ -126,10 +126,10 @@ test('the New Session, collapse-toggle and placeholder rules hide their own elem
     assert.ok(hideRules.includes(divRule), `the structural div-hide rule must exist verbatim: ${divRule}`)
   }
   // Only the panel-label rule may hide a span, pinned verbatim rather than by
-  // substring so a future rule that merely CONTAINS "span:last-child" cannot
-  // slip past the button-pattern check below.
+  // substring so a future rule that merely CONTAINS the selector cannot slip
+  // past the button-pattern check below.
   const spanRules = [
-    'nav:has(button [data-slot="sidebar.panellist"]) > button > span:last-child{display:none!important}',
+    'nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:none!important}',
   ]
   for (const spanRule of spanRules) {
     assert.ok(hideRules.includes(spanRule), `the label-hide rule must exist verbatim: ${spanRule}`)
@@ -165,8 +165,17 @@ test('panel layout CSS keeps rows tappable and collapses the rail', () => {
     'overflowing entries must wrap to the next line, not overflow')
   assert.match(chrome, /\[data-sidebar-collapsed="true"\]/,
     'the collapsed rail must be restored to the stock vertical layout')
-  assert.match(chrome, /> button > span:last-child\{display:none/,
+  assert.match(chrome, /button:has\(> span\) > span:not\(\[aria-hidden\]\):not\(:has\(\[data-slot\]\)\)\{display:none/,
     'the wide-state label span must be hidden (a display:none span receives no events)')
+  // Icon-only rows: the row button is matched by "has a direct-child span", so
+  // the shell may wrap it in an entry div — the shape current shells render —
+  // without the rule going inert. The label is identified as the direct-child
+  // span that is neither the aria-hidden glyph nor the anchor carrier, which
+  // keeps the glyph (and every future occupant of that seat) visible.
+  assert.match(chrome, /button:has\(> span\)\{width:auto!important;[^}]*gap:0!important/,
+    'icon-only rows must collapse the label gap and size the button to its content')
+  assert.match(chrome, /\[data-sidebar-collapsed="true"\][^\n]*button:has\(> span\) > span:not\(\[aria-hidden\]\):not\(:has\(\[data-slot\]\)\)\{display:inline/,
+    'the collapsed rail must restore the stock vertical layout with its labels')
 })
 
 test('shadowSwitch registers at the shadow priority and disposes when the pref flips off', async () => {

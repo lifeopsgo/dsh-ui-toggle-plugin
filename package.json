@@ -1,6 +1,6 @@
 {
   "name": "dsh-ui-toggle-plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "DSH WebUI chrome switches as one Settings section: hide or reshape the sidebar brand, account menu, panel layout, New Session and collapse buttons, and the composer placeholder — applied live without a reload.",
   "keywords": [
@@ -57,17 +57,17 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.0.4",
-    "@deepseek-ai/dsh-client-locale": "0.2.0-rc.1 || 0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-conversation": "0.2.0-rc.1 || 0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-settings-general": "0.2.0-rc.1 || 0.2.1-rc.2",
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-client-locale": ">=0.2.0-0 <0.3.0-0",
+    "@deepseek-ai/dsh-client-ui-conversation": ">=0.2.0-0 <0.3.0-0",
+    "@deepseek-ai/dsh-client-ui-settings-general": ">=0.2.0-0 <0.3.0-0",
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "4.0.5",
-    "@deepseek-ai/dsh-client-locale": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-conversation": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-settings-general": "0.2.1-rc.2",
+    "@deepseek-ai/cordis": "4.1.0",
+    "@deepseek-ai/dsh-client-locale": "0.2.2-rc.3",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.2.2-rc.3",
+    "@deepseek-ai/dsh-client-ui-settings-general": "0.2.2-rc.3",
     "@types/node": "^26.4.0",
     "@types/react": "^18.3.31",
     "react": "18.3.1",

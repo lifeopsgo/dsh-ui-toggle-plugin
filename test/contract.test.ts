@@ -24,7 +24,7 @@ test('the package manifest carries the plugin display metadata the Plugin Manage
     devDependencies?: Record<string, string>
   }
   assert.equal(pkg.name, 'dsh-ui-toggle-plugin', 'the package must keep the plugin id as its name')
-  assert.equal(pkg.version, '1.0.0', 'the initial split release is 1.0.0')
+  assert.equal(pkg.version, '1.1.0', 'the 0.2.x-wide compatibility release is 1.1.0')
   assert.equal(pkg.private, true, 'a profile-local plugin must not be publishable')
 
   const expectedExports: Record<string, unknown> = {
@@ -46,21 +46,22 @@ test('the package manifest carries the plugin display metadata the Plugin Manage
   assert.equal(pkg.dsh?.client?.inject?.[0], '@deepseek-ai/dsh-client-locale',
     'the client inject list must lead with the locale service package')
 
-  // Peer ranges: the live profile runs cordis 4.0.4 (0.2.0-rc.1) or the 4.0.x
-  // line (0.2.1-rc.2); devDependencies pin the version the peers gate last
-  // passed against.
+  // Peer ranges: the open range admits every 0.2.x DSH release, pre-releases
+  // included, so a DSH point release needs no plugin update; cordis ^4.0.4
+  // covers the 4.x line the 0.2.x GUI ships. devDependencies pin the version
+  // the peers gate last passed against.
   const expectedPeers: Record<string, string> = {
-    '@deepseek-ai/cordis': '~4.0.4',
-    '@deepseek-ai/dsh-client-locale': '0.2.0-rc.1 || 0.2.1-rc.2',
-    '@deepseek-ai/dsh-client-ui-conversation': '0.2.0-rc.1 || 0.2.1-rc.2',
-    '@deepseek-ai/dsh-client-ui-settings-general': '0.2.0-rc.1 || 0.2.1-rc.2',
+    '@deepseek-ai/cordis': '^4.0.4',
+    '@deepseek-ai/dsh-client-locale': '>=0.2.0-0 <0.3.0-0',
+    '@deepseek-ai/dsh-client-ui-conversation': '>=0.2.0-0 <0.3.0-0',
+    '@deepseek-ai/dsh-client-ui-settings-general': '>=0.2.0-0 <0.3.0-0',
     react: '^18.3.1',
   }
   for (const [name, range] of Object.entries(expectedPeers)) {
     assert.equal(pkg.peerDependencies?.[name], range, `peer ${name} must declare ${range}`)
   }
-  assert.equal(pkg.devDependencies?.['@deepseek-ai/cordis'], '4.0.5',
-    'the cordis devDependency must stay pinned ahead of the peer range so the peers gate keeps checking the real runtime line')
+  assert.equal(pkg.devDependencies?.['@deepseek-ai/cordis'], '4.1.0',
+    'the cordis devDependency must pin the version the live 0.2.x GUI runs so the peers gate keeps checking the real runtime line')
   assert.equal(pkg.devDependencies?.react, '18.3.1', 'react must pin the same minor the GUI ships')
 })
 
@@ -119,6 +120,6 @@ test('the lockfile pins the checked runtime and matches the manifest devDependen
   const lockPath = new URL('../pnpm-lock.yaml', import.meta.url)
   assert.ok(existsSync(lockPath), 'pnpm-lock.yaml must be committed so installs stay frozen')
   const lock = readFileSync(lockPath, 'utf8')
-  assert.match(lock, /'@deepseek-ai\/cordis@4\.0\.5'/, 'the lockfile must pin the cordis devDependency at 4.0.5')
+  assert.match(lock, /'@deepseek-ai\/cordis@4\.1\.0'/, 'the lockfile must pin the cordis devDependency at 4.1.0')
   assert.match(lock, /react@18\.3\.1/, 'the lockfile must pin react at 18.3.1')
 })

@@ -10,7 +10,7 @@
 | --- | --- |
 | 隐藏侧边栏顶部品牌区 | 左上角的鱼形图标和「DeepSeek Harness」文字不再显示 |
 | 左下角只留设置按钮 | 左下角的账号菜单换成单个设置按钮，设置功能不受影响 |
-| 面板图标横排 | 侧边栏的面板按钮（插件、堡垒机等）从竖着排变成横着排 |
+| 面板图标横排 | 侧边栏的面板按钮（插件、堡垒机等）从竖着排变成横着排，并且只留图标、不显示文字 |
 | 隐藏「新会话」按钮 | 侧边栏顶部的新会话按钮不再显示，快捷键 ⌥⌘N 仍可用 |
 | 隐藏「收起侧边栏」按钮 | 侧边栏的收起按钮不再显示，快捷键仍可用 |
 | 隐藏输入框提示文字 | 输入框为空时的灰色占位提示不再显示，不影响输入 |
@@ -20,7 +20,7 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add github:lifeopsgo/dsh-ui-toggle-plugin#v1.0.0
+dsh plugin --profile web add github:lifeopsgo/dsh-ui-toggle-plugin#v1.1.0
 dsh --profile web web
 ```
 
@@ -30,14 +30,7 @@ dsh --profile web web
 
 ## 兼容性
 
-面向 DSH 0.2.1-rc.2 开发和验证（也兼容 0.2.0-rc.1）。其他版本未验证。
-
-## 开发
-
-```bash
-pnpm install
-pnpm typecheck && pnpm build && pnpm test   # 37 项测试
-```
+peer 范围接纳**所有 DSH 0.2.x 版本**（含预发布）：DSH 发布 0.2.x 新版本时不需要更新本插件，只有 DSH 0.3.0 需要重新评估。在 0.2.1-rc.2 与 0.2.2-rc.3 上验证；0.2.x 以外不声明支持。
 
 实现细节见 [README.en.md](./README.en.md)（英文）与 [README.zh-CN.md](./README.zh-CN.md)（详细中文）。
 

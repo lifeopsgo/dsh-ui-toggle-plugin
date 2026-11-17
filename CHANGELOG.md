@@ -4,6 +4,18 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-11-17
+
+### Changed
+
+- **Support every DSH 0.2.x release without a plugin update.** The three `@deepseek-ai/dsh-client-*` peerDependencies widen from the exact `0.2.0-rc.1 || 0.2.1-rc.2` pins to the open range `>=0.2.0-0 <0.3.0-0`, so DSH 0.2.2-rc.3 and every later 0.2.x (pre-releases included) pass the startup compatibility check on their own — no per-version exemption, and no plugin release per DSH point release. Only a DSH 0.3.0 needs a fresh compatibility pass; the range excludes it and its pre-releases by design. The `@deepseek-ai/cordis` peer widens from `~4.0.4` to `^4.0.4`, covering the cordis 4.1.0 line DSH 0.2.2-rc.3 ships.
+
+- **devDependencies refresh to the current runtime** — cordis 4.1.0 and the three client packages at 0.2.2-rc.3 — so typechecks, builds and tests run against what the live 0.2.x GUI actually ships. Compatibility of every surface the plugin touches was verified against the installed 0.2.2-rc.3 packages: the slot keys (`sidebar.brand.mark`, `sidebar.brand.name`, `settings.launcher`, `settings.section`), the negative-priority shadow mechanism (`--nextPriority` in dsh-cordis-client-runner), the launcher owner share (`wide`, `openSettings`), the section props (`t`, `close`, `renderSlot`), the CSS anchors (`[data-slot]`, `data-composer-placeholder`, `data-sidebar-collapsed`), and the locale service signatures (`register`, `bind`). The upgrade guides from 0.2.1-rc.5 to 0.2.2-rc.3 contain no break affecting these surfaces.
+
+### Fixed
+
+- **"Lay global panel icons out horizontally" now actually leaves only the icons.** DSH 0.2.2 restructured the sidebar panel rows: the row button moved inside an entry div, the label became a conditional sibling span, and the wide row reserved a right gutter for a hover-only unpin control. The layout half of the rule still matched, so entries did sit side by side, but the label-hide rule was pinned to `> button > span:last-child` and no longer matched — every entry kept its text. The rules now select row buttons by "has a direct-child span", hide the direct-child span that is neither the `aria-hidden` glyph nor the `[data-slot]` anchor carrier, and size each row to its icon. The hover-only unpin control shrinks to a 16px corner badge instead of overlaying the icon; it stays reachable on hover because the More menu only offers PIN for unpinned entries, so hiding it would strand pinned panels. Verified against a live 0.2.2-rc.3 WebUI: every row is 28–34px wide, its label computes to `display:none`, and its glyph stays mounted.
+
 ## [1.0.0] - 2026-10-25
 
 First release. The six DSH WebUI chrome switches, split out of
