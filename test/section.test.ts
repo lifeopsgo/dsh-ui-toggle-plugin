@@ -1,7 +1,7 @@
 /**
  * Section suite for dsh-ui-toggle-plugin: renders the Settings configuration
  * page through the React 18 dispatcher harness and pins what the user sees —
- * the heading and intro, all six switch rows with their addressing-hook
+ * the heading and intro, all seven switch rows with their addressing-hook
  * classes, the switch accessible names, and that a click goes through
  * writePrefs so the live chrome follows. The dshui-row-* modifier classes are
  * the stable addressing hooks the browser e2e selects rows by; this test pins
@@ -19,7 +19,7 @@ test('the React 18 hook dispatcher is available', () => {
   assert.ok(available, 'the dispatcher harness must install (React 19 removed the private internals)')
 })
 
-test('the section renders heading, intro and six labelled switch rows', { skip: !available && 'needs the React 18 dispatcher' }, async () => {
+test('the section renders heading, intro and seven labelled switch rows', { skip: !available && 'needs the React 18 dispatcher' }, async () => {
   const { DEFAULT_PREFS } = await import('../src/client/prefs.ts')
 
   const t = (key: string): string => `T:${key}`
@@ -30,6 +30,7 @@ test('the section renders heading, intro and six labelled switch rows', { skip: 
   const rows = [
     'hidebrand', 'hidelauncher', 'panelsinline',
     'hidenewsession', 'hidesidebartoggle', 'hideinputplaceholder',
+    'hidepermissionlabel',
   ]
   for (const cls of rows) {
     const row = mounted.find(`dshui-row-${cls}`)
@@ -40,7 +41,7 @@ test('the section renders heading, intro and six labelled switch rows', { skip: 
       `row ${cls} must render the localized label text`)
   }
   assert.equal(mounted.find('dshui-heading')?.tag, 'h2', 'the heading must be a real h2 for the section outline')
-  assert.equal(mounted.findAll('dshui-switch').length, 6, 'exactly six switches must render')
+  assert.equal(mounted.findAll('dshui-switch').length, 7, 'exactly seven switches must render')
   for (const sw of mounted.findAll('dshui-switch')) {
     assert.equal(sw.props.role, 'switch', 'each toggle must expose the switch role')
     assert.equal(sw.props['aria-checked'], false, 'each switch must start off with the default prefs')
@@ -50,6 +51,7 @@ test('the section renders heading, intro and six labelled switch rows', { skip: 
   assert.deepEqual(DEFAULT_PREFS, {
     hideBrand: false, hideLauncher: false, panelsInline: false,
     hideNewSession: false, hideSidebarToggle: false, hideInputPlaceholder: false,
+    hidePermissionLabel: false,
   }, 'default prefs keep every element visible until the user opts in')
 })
 
@@ -108,11 +110,11 @@ test('flipping several switches without a re-render keeps every earlier flip', {
   const off = onPrefsChanged(p => heard.push(p))
   try {
     const t = (key: string): string => key
-    // One render, six clicks: the section's flip must read the PREVIOUS flip,
+    // One render, seven clicks: the section's flip must read the PREVIOUS flip,
     // not the render-time snapshot. A stale closure here would persist only
     // the last switch and drop the other five — observed live before the fix.
     const mounted = await renderSection({ t })
-    for (const cls of ['hidebrand', 'hidelauncher', 'panelsinline', 'hidenewsession', 'hidesidebartoggle', 'hideinputplaceholder']) {
+    for (const cls of ['hidebrand', 'hidelauncher', 'panelsinline', 'hidenewsession', 'hidesidebartoggle', 'hideinputplaceholder', 'hidepermissionlabel']) {
       const sw = mounted.findAll('dshui-switch').find(el => el.props['aria-labelledby'] === `dshui-label-${cls}`)
       assert.ok(sw, `the ${cls} row must carry its switch`)
       userClick(sw)
@@ -120,12 +122,14 @@ test('flipping several switches without a re-render keeps every earlier flip', {
     assert.deepEqual(readPrefs(storage), {
       hideBrand: true, hideLauncher: true, panelsInline: true,
       hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
+      hidePermissionLabel: true,
     }, 'every click in one batch must accumulate: a stale closure would persist only the last switch')
-    assert.equal(heard.length, 6, 'each click must notify once')
-    assert.deepEqual(heard[5], {
+    assert.equal(heard.length, 7, 'each click must notify once')
+    assert.deepEqual(heard[6], {
       hideBrand: true, hideLauncher: true, panelsInline: true,
       hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
-    }, 'the final notification must carry all six flips')
+      hidePermissionLabel: true,
+    }, 'the final notification must carry all seven flips')
     assert.ok(store.has(PREFS_KEY), 'the batch must persist under the plugin key')
   } finally {
     off()
@@ -152,7 +156,7 @@ test('re-mounting the section shows what the chrome applies, not a stale snapsho
     ;(globalThis as { localStorage?: unknown }).localStorage = freshStorage()
     const first = await renderSection({ t })
     assert.deepEqual(first.findAll('dshui-switch').map(s => s.props['aria-checked']),
-      [false, false, false, false, false, false], 'a fresh store mounts with every switch off')
+      [false, false, false, false, false, false, false], 'a fresh store mounts with every switch off')
 
     // The chrome flips values through the same single write path while the
     // section is unmounted (the shell unmounts it whenever its nav row is

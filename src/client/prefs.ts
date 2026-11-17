@@ -1,5 +1,5 @@
 /**
- * Live preferences for the six DSH chrome switches this plugin owns. Stored in
+ * Live preferences for the seven DSH chrome switches this plugin owns. Stored in
  * one JSON blob under one localStorage key; every switch is a plain boolean
  * and absence reads as "off".
  *
@@ -13,6 +13,7 @@ export interface UiPrefs {
   readonly hideNewSession: boolean
   readonly hideSidebarToggle: boolean
   readonly hideInputPlaceholder: boolean
+  readonly hidePermissionLabel: boolean
 }
 
 export interface PrefsStorage {
@@ -37,6 +38,7 @@ export const DEFAULT_PREFS: UiPrefs = {
   hideNewSession: false,
   hideSidebarToggle: false,
   hideInputPlaceholder: false,
+  hidePermissionLabel: false,
 }
 
 function defaultStorage(): PrefsStorage | undefined {
@@ -45,7 +47,7 @@ function defaultStorage(): PrefsStorage | undefined {
 }
 
 /**
- * Validate and project the six chrome fields off a parsed blob. All-or-nothing:
+ * Validate and project the seven chrome fields off a parsed blob. All-or-nothing:
  * a stored blob from an earlier release may simply lack a field (absence reads
  * as "off"), while a present-but-non-boolean value rejects the whole blob —
  * for readPrefs back to defaults, for the legacy seed to no migration.
@@ -63,6 +65,7 @@ function chromeFieldsFrom(candidate: object): UiPrefs | undefined {
     hideNewSession: typeof c.hideNewSession === 'boolean' ? c.hideNewSession : false,
     hideSidebarToggle: typeof c.hideSidebarToggle === 'boolean' ? c.hideSidebarToggle : false,
     hideInputPlaceholder: typeof c.hideInputPlaceholder === 'boolean' ? c.hideInputPlaceholder : false,
+    hidePermissionLabel: typeof c.hidePermissionLabel === 'boolean' ? c.hidePermissionLabel : false,
   }
 }
 
@@ -86,9 +89,9 @@ export function readPrefs(storage: PrefsStorage | undefined = defaultStorage()):
 }
 
 /**
- * One-time migration from the pre-split storage: the six chrome switches used
+ * One-time migration from the pre-split storage: the seven chrome switches used
  * to live in the dsh-capability-toggle-plugin panel's prefs blob. When this
- * plugin's own key does not exist yet and the legacy blob parses, carry the six
+ * plugin's own key does not exist yet and the legacy blob parses, carry the seven
  * chrome fields over (same absence-reads-as-off, corrupt-rejects-all rule) and
  * persist them under the new key. The legacy key is never written.
  *

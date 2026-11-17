@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-11-17
+
+### Added
+
+- **Show only the permission icon** — a seventh switch hides the preset name on the composer's permission selector ("完全权限" / Full access, "工作区内修改" / Workspace write and the other preset names), leaving the shield glyph and the dropdown chevron. The rule anchors on the conversation's `[data-slot="conversation.input.permission"]` wrapper and hides the trigger button's only direct-child span without `aria-hidden` — the glyph and the chevron both carry that attribute, and the preset names are localized and host-renameable, so the copy is never matched. The button keeps its aria-label and title, so the control still announces itself and still opens and switches normally.
+
+### Changed
+
+- **The READMEs and the Plugin Manager card now describe seven switches**, and the display metadata in `locale/zh.json` and `locale/en.json` lists the new one.
+
 ## [1.1.0] - 2026-11-17
 
 ### Changed

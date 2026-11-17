@@ -2,7 +2,7 @@
 
 # dsh-ui-toggle-plugin
 
-**把 DSH WebUI 的六个界面开关收进一个设置页。**
+**把 DSH WebUI 的七个界面开关收进一个设置页。**
 
 [![platform](https://img.shields.io/badge/platform-DSH%20WebUI-2b7cd3?style=flat-square)](#快速开始)
 ![tests](https://img.shields.io/badge/tests-37%20passing-3fb950?style=flat-square)
@@ -14,7 +14,7 @@
 
 ## 这是什么
 
-一个 **DeepSeek Harness (DSH) WebUI** 插件：在设置里新增 **UI 开关** 分区，用六个开关控制宿主界面自身的元素。
+一个 **DeepSeek Harness (DSH) WebUI** 插件：在设置里新增 **UI 开关** 分区，用七个开关控制宿主界面自身的元素。
 
 | 开关 | 效果 |
 | :-- | :-- |
@@ -24,6 +24,7 @@
 | **隐藏「新会话」按钮** | 隐藏侧栏顶部的新会话大按钮；新建会话的快捷键不受影响。 |
 | **隐藏「收起侧边栏」按钮** | 隐藏侧栏的收起/展开按钮；快捷键仍可收起与展开。顶部 logo 行由宿主固定高度，因此当开关使其清空后（宽态为品牌与开关同时隐藏，收起态仅需隐藏开关），该行整体收起，不留空白条。 |
 | **隐藏输入框占位文案** | 隐藏输入框为空时的提示文字。宿主把它渲染为带稳定 `data-composer-placeholder` 属性的 aria-hidden div（全框架唯一一处），因此规则锚定该属性，绝不匹配文案本身。输入功能不受影响，输入框保留 aria-label。 |
+| **权限模式只保留图标** | 隐藏输入框下方权限选择器上的文字（「完全权限」「工作区内修改」等），只保留盾牌图标与下拉箭头。按钮保留 aria-label，选择器仍可正常展开与切换。 |
 
 每个开关都**即时生效**、无需刷新，并保存在本浏览器的 `localStorage` 中。
 
@@ -34,7 +35,7 @@ peer 范围 `>=0.2.0-0 <0.3.0-0` 接纳**所有 DSH 0.2.x 版本**（含预发�
 | DSH 版本 | 状态 | 验证方式 |
 | --- | --- | --- |
 | 0.2.2-rc.3 | 支持 | Host 与 Client 类型检查、生产构建、37 项自动化测试、`--frozen-lockfile` 安装，以及对照 0.2.2-rc.3 安装包源码的逐项契约核对（slot 键、负优先级遮蔽机制、launcher owner share、section props、CSS 锚点、locale 服务签名）；0.2.1-rc.5 → 0.2.2-rc.3 升级指南中无涉及本插件扩展面的变更 |
-| 0.2.1-rc.2 | 支持 | Host 与 Client 类型检查、生产构建、37 项自动化测试、`--frozen-lockfile` 安装，以及真实 WebUI 上六个开关的端到端浏览器验证 |
+| 0.2.1-rc.2 | 支持 | Host 与 Client 类型检查、生产构建、37 项自动化测试、`--frozen-lockfile` 安装，以及真实 WebUI 上开关的端到端浏览器验证 |
 
 0.2.x 以外的 DSH 版本不声明支持。
 

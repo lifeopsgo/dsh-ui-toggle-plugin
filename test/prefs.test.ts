@@ -1,7 +1,7 @@
 /**
- * prefs suite for dsh-ui-toggle-plugin: the six chrome-switch fields, the
+ * prefs suite for dsh-ui-toggle-plugin: the seven chrome-switch fields, the
  * all-or-nothing validation, and the one-time seed from the pre-split storage
- * key (the six switches used to live in the dsh-capability-toggle-plugin
+ * key (the switches used to live in the dsh-capability-toggle-plugin
  * panel's localStorage blob).
  *
  * @module dsh-ui-toggle-plugin/test/prefs
@@ -31,7 +31,7 @@ function freshStore(): Store {
   }
 }
 
-test('prefs default to every chrome switch off and round-trip the six fields', async () => {
+test('prefs default to every chrome switch off and round-trip the seven fields', async () => {
   const { readPrefs, writePrefs, DEFAULT_PREFS, PREFS_KEY } = await import('../src/client/prefs.ts')
   const { storage, store } = freshStore()
 
@@ -40,18 +40,21 @@ test('prefs default to every chrome switch off and round-trip the six fields', a
   assert.deepEqual(readPrefs(storage), {
     hideBrand: false, hideLauncher: false, panelsInline: false,
     hideNewSession: false, hideSidebarToggle: false, hideInputPlaceholder: false,
+    hidePermissionLabel: false,
   })
   assert.equal(store.size, 0, 'reading defaults must not persist anything')
 
   writePrefs({
     ...DEFAULT_PREFS, hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
+    hidePermissionLabel: true,
   }, storage)
   assert.equal(store.size, 1, 'writing must persist exactly one blob')
   assert.ok(store.has(PREFS_KEY), 'the blob must live under the plugin key')
   assert.deepEqual(readPrefs(storage), {
     hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
+    hidePermissionLabel: true,
   })
 })
 
@@ -61,6 +64,7 @@ test('a stored blob without a switch field upgrades it in place as off; a corrup
   const off = {
     hideBrand: false, hideLauncher: false, panelsInline: false,
     hideNewSession: false, hideSidebarToggle: false, hideInputPlaceholder: false,
+    hidePermissionLabel: false,
   }
 
   // Absence reads as "off": an early-release blob lacking a field upgrades.
@@ -83,14 +87,14 @@ test('a stored blob without a switch field upgrades it in place as off; a corrup
   }
 })
 
-test('seedFromLegacyPrefs carries the six switch values from the pre-split key once', async () => {
+test('seedFromLegacyPrefs carries the chrome switch values from the pre-split key once', async () => {
   const { seedFromLegacyPrefs, readPrefs, writePrefs, DEFAULT_PREFS, PREFS_KEY } =
     await import('../src/client/prefs.ts')
   const LEGACY = 'dsh-capability-toggle-plugin:panel-prefs'
   const { storage, store } = freshStore()
 
   // The legacy blob holds the panel's own display fields too — the seed reads
-  // only the six chrome fields and ignores the rest.
+  // only the chrome fields and ignores the rest.
   store.set(LEGACY, JSON.stringify({
     showFraction: true, showUsage: false, levels: 'all',
     hideBrand: true, hideLauncher: true, panelsInline: true,
@@ -100,7 +104,8 @@ test('seedFromLegacyPrefs carries the six switch values from the pre-split key o
   assert.deepEqual(seeded, {
     hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
-  }, 'the seed must carry the six chrome values')
+    hidePermissionLabel: false,
+  }, 'the seed must carry every chrome value the legacy blob holds; the newer field reads as off')
   assert.ok(store.has(PREFS_KEY), 'the seed must persist under the new key')
   assert.deepEqual(readPrefs(storage), seeded, 'readPrefs must serve the seeded values afterwards')
   assert.equal(store.get(LEGACY), JSON.stringify({

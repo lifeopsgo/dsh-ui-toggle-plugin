@@ -1,6 +1,6 @@
 /**
  * Chrome suite for dsh-ui-toggle-plugin, ported from the panel-era batch the
- * plugin was split out of. These tests pin the contract between the six
+ * plugin was split out of. These tests pin the contract between the
  * switches and the DSH WebUI chrome they reshape:
  *   - the shadowing layer waits on exactly the three shipped slots and binds
  *     the plugin locale namespace (a bare register would kill the client boot);
@@ -60,6 +60,7 @@ test('the CSS-gated switches key their rule sets off their prefs', () => {
   assert.match(composer, /prefs\.hideNewSession/, 'the New Session hide must be CSS-gated off prefs.hideNewSession')
   assert.match(composer, /prefs\.hideSidebarToggle/, 'the collapse-toggle hide must be CSS-gated off prefs.hideSidebarToggle')
   assert.match(composer, /prefs\.hideInputPlaceholder/, 'the input placeholder hide must be CSS-gated off prefs.hideInputPlaceholder')
+  assert.match(composer, /prefs\.hidePermissionLabel/, 'the permission label hide must be CSS-gated off prefs.hidePermissionLabel')
   assert.match(composer, /prefs\.hideBrand && prefs\.hideSidebarToggle/,
     'the wide logo row may only collapse when BOTH the brand and the toggle are hidden — one visible child keeps the row')
 })
@@ -130,6 +131,7 @@ test('the New Session, collapse-toggle and placeholder rules hide their own elem
   // past the button-pattern check below.
   const spanRules = [
     'nav:has(button [data-slot="sidebar.panellist"]) button:has(> span) > span:not([aria-hidden]):not(:has([data-slot])){display:none!important}',
+    '[data-slot="conversation.input.permission"] button > span:not([aria-hidden]){display:none!important}',
   ]
   for (const spanRule of spanRules) {
     assert.ok(hideRules.includes(spanRule), `the label-hide rule must exist verbatim: ${spanRule}`)
@@ -139,6 +141,32 @@ test('the New Session, collapse-toggle and placeholder rules hide their own elem
   for (const rule of buttonHides) {
     assert.match(rule, /> button(:not\(:has\(\[data-slot\]\)\))?(:has\(\[data-slot="sidebar\.brand\.name"\]\))?\{display:none!important\}$/,
       `an outright hide must target a button or a structural div, never a slot anchor: ${rule}`)
+  }
+})
+
+test('the permission-label rule anchors on the slot and spares the glyph and chevron', () => {
+  const chrome = clientSource('chrome.ts')
+  const start = chrome.indexOf('const PERMISSION_LABEL_CSS')
+  const block = start === -1 ? '' : chrome.slice(start, chrome.indexOf('`.trim()', start))
+  assert.ok(block.length > 0, 'the permission label rule must exist as its own block')
+  // The permission control renders inside the conversation's declared single
+  // slot, so its [data-slot] anchor pins the rule to that one button and never
+  // to a preset name (which is localized, and which the host may rename).
+  assert.match(block, /\[data-slot="conversation\.input\.permission"\] button > span:not\(\[aria-hidden\]\)\{display:none!important\}/,
+    'the rule must hide the label span of the permission trigger only')
+  // The trigger's other two children (preset glyph, chevron) both carry
+  // aria-hidden, so the not() selector spares them and the control still reads
+  // as a dropdown.
+  // Comments may discuss the chevron; the SELECTORS may not name shipped
+  // hash-scoped class names, which change on every DSH rebuild.
+  const selectorLines = block.replace(/\/\*[\s\S]*?\*\//g, '').split('\n').filter(line => line.trim() !== '')
+  for (const line of selectorLines) {
+    assert.doesNotMatch(line, /chevron|triggerIcon|triggerLabel/,
+      `the rule must not name the shipped hash-scoped class names: ${line}`)
+  }
+  for (const line of selectorLines) {
+    assert.doesNotMatch(line, /完全权限|Full access|workspace-write|read-only/,
+      `the rule must never match the copy: preset names are localized and host-renameable: ${line}`)
   }
 })
 

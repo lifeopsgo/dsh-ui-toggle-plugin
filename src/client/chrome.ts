@@ -276,6 +276,7 @@ function chromeCss(prefs: UiPrefs): string {
   if (prefs.hideNewSession) blocks.push(NEW_SESSION_CSS)
   if (prefs.hideSidebarToggle) blocks.push(SIDEBAR_TOGGLE_CSS)
   if (prefs.hideInputPlaceholder) blocks.push(INPUT_PLACEHOLDER_CSS)
+  if (prefs.hidePermissionLabel) blocks.push(PERMISSION_LABEL_CSS)
   // The wide logo row holds TWO children (brand button, toggle), so it may
   // only collapse when both of their switches hide them — one visible child
   // must keep the row (and the window-drag strip) alive.
@@ -403,4 +404,20 @@ const INPUT_PLACEHOLDER_CSS = `
    placeholder text) untouched, so screen readers keep announcing the field.
    !important as above: cascade order is not guaranteed. */
 div[data-composer-placeholder]{display:none!important}
+`.trim()
+
+const PERMISSION_LABEL_CSS = `
+/* The composer's permission control ("完全权限" / "Workspace write" and the
+   other preset names) is one button with THREE children: the preset glyph, the
+   localized preset name, and a chevron. Both glyph and chevron are aria-hidden;
+   the name is the only direct-child span without it — and its copy is exactly
+   what must not be matched, since the four preset names are localized (only
+   this one package's dictionary carries 完全权限) and the host may rename a
+   preset entirely. The button itself renders inside the conversation's
+   declared single slot, so the stable [data-slot] anchor of that slot pins the
+   rule to this one control. The button keeps its aria-label (the mode label
+   composed with the preset name) and its title, so the control still announces
+   itself; the chevron stays, so the row still reads as a dropdown. !important as above: cascade order is
+   not guaranteed. */
+[data-slot="conversation.input.permission"] button > span:not([aria-hidden]){display:none!important}
 `.trim()

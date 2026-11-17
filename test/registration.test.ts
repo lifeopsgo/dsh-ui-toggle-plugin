@@ -80,7 +80,7 @@ test('the section page pins the framework section-shell contract it relies on', 
   assert.match(section, /props\.t \?\? passthrough/, 'the section must fall back to key passthrough before the translator is injected')
   const switches = [...section.matchAll(/key: '(\w+)'/g)].map(m => m[1]).sort()
   assert.deepEqual(switches, [
-    'hideBrand', 'hideInputPlaceholder', 'hideLauncher',
-    'hideNewSession', 'hideSidebarToggle', 'panelsInline',
-  ], 'the section must expose exactly the six chrome switches')
+    'hideBrand', 'hideInputPlaceholder', 'hideLauncher', 'hideNewSession',
+    'hidePermissionLabel', 'hideSidebarToggle', 'panelsInline',
+  ], 'the section must expose exactly the seven chrome switches')
 })

@@ -25,6 +25,8 @@ const zh: Record<string, string> = {
   'prefs.sidebartoggle.hint': '隐藏侧栏的收起/展开按钮；对应快捷键仍可收起与展开。清空的顶部行会整体收起、不留空白：宽态需与品牌隐藏同时开启，收起态下仅开本开关即可',
   'prefs.inputplaceholder': '隐藏输入框占位文案',
   'prefs.inputplaceholder.hint': '隐藏输入框为空时的提示文字（「发消息或创建任务…」等）；输入功能不受影响，屏幕阅读器仍可读取输入框',
+  'prefs.permission': '权限模式只保留图标',
+  'prefs.permission.hint': '隐藏输入框下方权限选择器上的文字（「完全权限」等），只留下盾牌图标与下拉箭头；选择器仍可正常展开与切换',
   'launcher.settings': '设置',
 }
 
@@ -45,6 +47,8 @@ const en: Record<string, string> = {
   'prefs.sidebartoggle.hint': 'Hides the sidebar collapse/expand button; its keyboard shortcut still toggles the sidebar. The emptied logo row collapses instead of leaving a blank strip — in wide state that needs the brand hidden too; in the rail state this switch alone collapses it',
   'prefs.inputplaceholder': 'Hide the input placeholder',
   'prefs.inputplaceholder.hint': 'Hides the hint text the empty composer shows (Message or run a task…); typing is unaffected and screen readers still read the field',
+  'prefs.permission': 'Show only the permission icon',
+  'prefs.permission.hint': 'Hides the preset name on the permission selector under the composer (Full access and the other names), leaving the shield glyph and the dropdown chevron; the selector still opens and switches normally',
   'launcher.settings': 'Settings',
 }
 
