@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] - 2026-11-20
+
+### Fixed
+
+- **The New Session switch works again on current 0.2.x shells.** Those shells moved the button out of the sidebar root column into a row div behind the new `[data-slot="sidebar.session.action"]` anchor, so the old rule — which hid the column's direct-child button — matched nothing and the button stayed on screen. The switch now also hides the element that directly hosts that anchor, which is the row itself, so no empty 38px strip is left behind either. The older structural rule stays for 0.2.0/0.2.1 shells, where it is the one that matches. Verified on a live 0.2.2-rc.3 instance: with the switch on, the row measures 0x0; with it off, the row and its 38px button come back.
+
 ## [1.2.1] - 2026-11-17
 
 ### Fixed

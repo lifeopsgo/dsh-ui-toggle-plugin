@@ -121,6 +121,7 @@ test('the New Session, collapse-toggle and placeholder rules hide their own elem
   const divRules = [
     'div:has(> button [data-slot="sidebar.brand.name"]){display:none!important}',
     'div:has(> button > [data-slot="sidebar.toggle.badge"]){display:none!important}',
+    'div:has(> [data-slot="sidebar.session.action"]){display:none!important}',
     'div[data-composer-placeholder]{display:none!important}',
   ]
   for (const divRule of divRules) {

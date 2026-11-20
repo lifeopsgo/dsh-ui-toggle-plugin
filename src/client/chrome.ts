@@ -348,16 +348,19 @@ nav:has(button [data-slot="sidebar.panellist"]) > * > button:not(:has(> span)){d
 `.trim()
 
 const NEW_SESSION_CSS = `
-/* The New Session button sits in NO slot, so it cannot be shadowed. It is
-   the only direct-child <button> of the sidebar root column — the shell's
-   Tooltip clones its handlers onto the button and adds no wrapper — and the
-   root column is the div whose direct div child (the workspaces region)
-   directly hosts the [data-slot="sidebar.workspaces"] anchor, which the
-   renderer always emits. Climb from that anchor and hide the column's
-   direct-child button; valid in wide, rail and windows-titlebar states alike
-   (the region div is unconditional in the shell). Same !important rationale
-   as the panel rules. */
+/* The New Session button sits in NO slot on 0.2.0/0.2.1, so it cannot be
+   shadowed: it is the only direct-child <button> of the sidebar root column,
+   and the root is the div whose direct div child (the workspaces region)
+   directly hosts the [data-slot="sidebar.workspaces"] anchor. Current 0.2.x
+   shells moved the button into a row div behind the new
+   [data-slot="sidebar.session.action"] anchor, which leaves the button one
+   level deeper and the older rule inert. Cover both shapes: climb from the
+   workspaces anchor to the column for the bare button, and hide the element
+   that directly hosts the session-action anchor for the row — hiding the row
+   rather than its button also removes the row's own height, so no blank strip
+   is left behind. Same !important rationale as the panel rules. */
 div:has(> div > [data-slot="sidebar.workspaces"]) > button{display:none!important}
+div:has(> [data-slot="sidebar.session.action"]){display:none!important}
 `.trim()
 
 const SIDEBAR_TOGGLE_CSS = `
