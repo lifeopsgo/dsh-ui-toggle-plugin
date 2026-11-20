@@ -11,6 +11,9 @@ export const NS = 'dsh-ui-toggle-plugin'
 /** zh-CN: the section nav row, heading and switch copy. */
 const zh: Record<string, string> = {
   'nav': 'UI 开关',
+  'health.title': '有开关在当前 DSH 版本下失效',
+  'health.body': '当前 DSH 版的界面结构变了，下面这些开关找不到作用对象，打开也不会有变化。等插件更新后会自动恢复。',
+  'health.badge': '失效',
   'title': 'UI 开关',
   'intro': '按需隐藏或重塑界面元素，改动即时生效并保存在本浏览器，重启后仍保留。',
   'prefs.brand': '隐藏侧栏顶部品牌区',
@@ -33,6 +36,9 @@ const zh: Record<string, string> = {
 /** English mirrors zh key for key. */
 const en: Record<string, string> = {
   'nav': 'UI toggle',
+  'health.title': 'A switch no longer works on this DSH version',
+  'health.body': 'This DSH version changed the markup behind the switches below: they no longer find anything to act on, so flipping them changes nothing. They come back once the plugin is updated.',
+  'health.badge': 'broken',
   'title': 'UI toggle',
   'intro': 'Hide or reshape interface elements as you like. Every switch applies live and stays saved in this browser across restarts.',
   'prefs.brand': 'Hide the sidebar brand area',

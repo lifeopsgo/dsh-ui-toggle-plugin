@@ -14,6 +14,11 @@ const CSS = `
 .dshui-section{display:flex;flex-direction:column;gap:4px;max-width:640px}
 .dshui-heading{margin:0;color:var(--dsw-alias-label-primary);font-size:20px;font-weight:600;line-height:28px}
 .dshui-intro{margin:0 0 10px;color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}
+.dshui-alert{display:flex;flex-direction:column;gap:2px;margin:0 0 10px;padding:10px 14px;border:1px solid var(--dsw-alias-state-warning-primary,var(--dsw-alias-border-l2));border-radius:12px;background:var(--dsw-alias-bg-layer-1)}
+.dshui-alert-title{color:var(--dsw-alias-label-primary);font-size:13px;font-weight:600;line-height:1.5}
+.dshui-alert-body{color:var(--dsw-alias-label-secondary);font-size:12px;line-height:1.6}
+.dshui-alert-list{margin:2px 0 0;padding-left:18px;color:var(--dsw-alias-label-secondary);font-size:12px;line-height:1.6}
+.dshui-row-broken{margin-left:6px;padding:1px 6px;border-radius:999px;background:var(--dsw-alias-state-warning-primary,var(--dsw-alias-border-l2));color:var(--dsw-alias-label-primary);font-size:11px;font-weight:600;line-height:1.5;vertical-align:1px}
 .dshui-rows{display:flex;flex-direction:column;border:1px solid var(--dsw-alias-border-l2);border-radius:12px;background:var(--dsw-alias-bg-layer-1);overflow:hidden}
 .dshui-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px}
 .dshui-row+.dshui-row{border-top:1px solid var(--dsw-alias-border-l1)}

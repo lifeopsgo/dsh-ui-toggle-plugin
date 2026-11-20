@@ -90,14 +90,19 @@ async function loadModule(): Promise<Record<string, unknown>> {
       id === 'react' ||
       id === 'react/jsx-runtime' ||
       id.endsWith('/prefs.ts') ||
-      id === './prefs.ts',
+      id === './prefs.ts' ||
+      // Same reason as prefs: the section reads the monitor the client half
+      // feeds, so the bundle must share the tests' module instance.
+      id.endsWith('/health.ts') ||
+      id === './health.ts',
   })
   const { output } = await bundle.generate({ format: 'esm' })
   // Rolldown does not implement rollup's output.paths, so rewrite the external
   // import by hand: './prefs.ts' is bundle-relative and wrong from .temp/;
   // '../src/client/prefs.ts' points back at the real source module.
-  const code = output[0].code.replace(/(['"])\.\/prefs\.ts\1/g,
-    (_m, q: string) => `${q}../src/client/prefs.ts${q}`)
+  const code = output[0].code
+    .replace(/(['"])\.\/prefs\.ts\1/g, (_m, q: string) => `${q}../src/client/prefs.ts${q}`)
+    .replace(/(['"])\.\/health\.ts\1/g, (_m, q: string) => `${q}../src/client/health.ts${q}`)
   writeFileSync(out, code)
   mod = (await import(`${out.pathname}?v=${Date.now()}`)) as Record<string, unknown>
   return mod

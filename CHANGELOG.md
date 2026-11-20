@@ -4,6 +4,17 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-11-20
+
+### Added
+
+- **The section now says when a switch stopped working.** Each switch is a promise about the shell's markup — a slot key it shadows or a selector it drives — and a DSH upgrade can rename either one, which leaves the switch flipping a pref that changes nothing. A monitor now records the anchors behind all seven switches while the app runs and reports, above the switch list, any switch whose screen was on screen while none of its anchors ever appeared. The row also carries an 失效 / broken badge. A switch whose screen has not rendered yet (no conversation open, so no composer) reports unknown and stays out of the warning: no false alarms for elements that are simply not on screen.
+- `test/health.test.ts` pins the probe table (one probe per switch, every target still driven by `chrome.ts`, no hash-scoped class names or localized copy in any selector) and the verdict rules (unknown before the screen renders, broken when the screen has no anchor, ok for the rest of the session once an anchor was seen).
+
+### Changed
+
+- New locale keys `health.title`, `health.body` and `health.badge` in both dictionaries, and the styles for the warning block.
+
 ## [1.2.2] - 2026-11-20
 
 ### Fixed

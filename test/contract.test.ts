@@ -24,7 +24,7 @@ test('the package manifest carries the plugin display metadata the Plugin Manage
     devDependencies?: Record<string, string>
   }
   assert.equal(pkg.name, 'dsh-ui-toggle-plugin', 'the package must keep the plugin id as its name')
-  assert.equal(pkg.version, '1.2.2', 'the New Session fix release is 1.2.2')
+  assert.equal(pkg.version, '1.3.0', 'the self-check release is 1.3.0')
   assert.equal(pkg.private, true, 'a profile-local plugin must not be publishable')
 
   const expectedExports: Record<string, unknown> = {

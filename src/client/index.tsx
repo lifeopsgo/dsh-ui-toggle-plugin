@@ -21,6 +21,7 @@ import { NS, dictionaries } from './locales.ts'
 import { seedFromLegacyPrefs, readPrefs, onPrefsChanged } from './prefs.ts'
 import { injectStyles } from './styles.ts'
 import { installChrome } from './chrome.ts'
+import { observeHealth } from './health.ts'
 import { UiToggleSection } from './section.tsx'
 import type { ClientContext, SlotComponent } from './types.ts'
 
@@ -37,6 +38,9 @@ export function apply(ctx: ClientContext): void {
   // switch values over when this plugin's own key does not exist yet.
   seedFromLegacyPrefs()
   installChrome(ctx, readPrefs, onPrefsChanged)
+  // Watches the anchors the switches act on, so the Settings section can tell a
+  // switch that merely looks inert from one the shell's new markup broke.
+  ctx.effect(() => observeHealth(document), 'ui-toggle: health probe')
   const t = ctx.locale.bind(NS)
   ctx.slots.inject('settings.section', () =>
     ctx.slots.register(
