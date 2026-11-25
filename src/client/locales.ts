@@ -11,6 +11,8 @@ export const NS = 'dsh-ui-toggle-plugin'
 /** zh-CN: the section nav row, heading and switch copy. */
 const zh: Record<string, string> = {
   'nav': 'UI 开关',
+  'prefs.feedback': '隐藏命令菜单里的「反馈」',
+  'prefs.feedback.hint': '打开「/」命令菜单时不再列出反馈；手动输入 /feedback 仍可发送',
   'health.title': '有开关在当前 DSH 版本下失效',
   'health.body': '当前 DSH 版的界面结构变了，下面这些开关找不到作用对象，打开也不会有变化。等插件更新后会自动恢复。',
   'health.badge': '失效',
@@ -36,6 +38,8 @@ const zh: Record<string, string> = {
 /** English mirrors zh key for key. */
 const en: Record<string, string> = {
   'nav': 'UI toggle',
+  'prefs.feedback': 'Hide the Feedback command',
+  'prefs.feedback.hint': 'Drops the feedback row from the "/" menu; typing /feedback still works',
   'health.title': 'A switch no longer works on this DSH version',
   'health.body': 'This DSH version changed the markup behind the switches below: they no longer find anything to act on, so flipping them changes nothing. They come back once the plugin is updated.',
   'health.badge': 'broken',

@@ -40,21 +40,21 @@ test('prefs default to every chrome switch off and round-trip the seven fields',
   assert.deepEqual(readPrefs(storage), {
     hideBrand: false, hideLauncher: false, panelsInline: false,
     hideNewSession: false, hideSidebarToggle: false, hideInputPlaceholder: false,
-    hidePermissionLabel: false,
+    hidePermissionLabel: false, hideFeedbackCommand: false,
   })
   assert.equal(store.size, 0, 'reading defaults must not persist anything')
 
   writePrefs({
     ...DEFAULT_PREFS, hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
-    hidePermissionLabel: true,
+    hidePermissionLabel: true, hideFeedbackCommand: true,
   }, storage)
   assert.equal(store.size, 1, 'writing must persist exactly one blob')
   assert.ok(store.has(PREFS_KEY), 'the blob must live under the plugin key')
   assert.deepEqual(readPrefs(storage), {
     hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
-    hidePermissionLabel: true,
+    hidePermissionLabel: true, hideFeedbackCommand: true,
   })
 })
 
@@ -64,7 +64,7 @@ test('a stored blob without a switch field upgrades it in place as off; a corrup
   const off = {
     hideBrand: false, hideLauncher: false, panelsInline: false,
     hideNewSession: false, hideSidebarToggle: false, hideInputPlaceholder: false,
-    hidePermissionLabel: false,
+    hidePermissionLabel: false, hideFeedbackCommand: false,
   }
 
   // Absence reads as "off": an early-release blob lacking a field upgrades.
@@ -104,7 +104,7 @@ test('seedFromLegacyPrefs carries the chrome switch values from the pre-split ke
   assert.deepEqual(seeded, {
     hideBrand: true, hideLauncher: true, panelsInline: true,
     hideNewSession: true, hideSidebarToggle: true, hideInputPlaceholder: true,
-    hidePermissionLabel: false,
+    hidePermissionLabel: false, hideFeedbackCommand: false,
   }, 'the seed must carry every chrome value the legacy blob holds; the newer field reads as off')
   assert.ok(store.has(PREFS_KEY), 'the seed must persist under the new key')
   assert.deepEqual(readPrefs(storage), seeded, 'readPrefs must serve the seeded values afterwards')

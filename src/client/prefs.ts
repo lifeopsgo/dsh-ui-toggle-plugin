@@ -14,6 +14,7 @@ export interface UiPrefs {
   readonly hideSidebarToggle: boolean
   readonly hideInputPlaceholder: boolean
   readonly hidePermissionLabel: boolean
+  readonly hideFeedbackCommand: boolean
 }
 
 export interface PrefsStorage {
@@ -39,6 +40,7 @@ export const DEFAULT_PREFS: UiPrefs = {
   hideSidebarToggle: false,
   hideInputPlaceholder: false,
   hidePermissionLabel: false,
+  hideFeedbackCommand: false,
 }
 
 function defaultStorage(): PrefsStorage | undefined {
@@ -47,7 +49,7 @@ function defaultStorage(): PrefsStorage | undefined {
 }
 
 /**
- * Validate and project the seven chrome fields off a parsed blob. All-or-nothing:
+ * Validate and project the chrome fields off a parsed blob. All-or-nothing:
  * a stored blob from an earlier release may simply lack a field (absence reads
  * as "off"), while a present-but-non-boolean value rejects the whole blob —
  * for readPrefs back to defaults, for the legacy seed to no migration.
@@ -66,6 +68,7 @@ function chromeFieldsFrom(candidate: object): UiPrefs | undefined {
     hideSidebarToggle: typeof c.hideSidebarToggle === 'boolean' ? c.hideSidebarToggle : false,
     hideInputPlaceholder: typeof c.hideInputPlaceholder === 'boolean' ? c.hideInputPlaceholder : false,
     hidePermissionLabel: typeof c.hidePermissionLabel === 'boolean' ? c.hidePermissionLabel : false,
+    hideFeedbackCommand: typeof c.hideFeedbackCommand === 'boolean' ? c.hideFeedbackCommand : false,
   }
 }
 

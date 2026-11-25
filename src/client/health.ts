@@ -97,6 +97,7 @@ export const PROBES: readonly Probe[] = [
   },
 ]
 
+const runtimeProbes = new Map<SwitchKey, () => HealthState>()
 const seenTargets = new Set<string>()
 const seenRegions = new Set<string>()
 
@@ -110,12 +111,30 @@ export function scanHealth(root: HealthRoot): void {
   }
 }
 
+/**
+ * Register a probe for a switch whose effect is not a DOM anchor (a service
+ * this plugin wraps). The probe answers on its own; the DOM bookkeeping above
+ * never sees it.
+ *
+ * @param key - the switch it judges.
+ * @param probe - called on every report; returns the current verdict.
+ * @returns a disposer removing the probe.
+ */
+export function registerRuntimeProbe(key: SwitchKey, probe: () => HealthState): () => void {
+  runtimeProbes.set(key, probe)
+  return () => {
+    if (runtimeProbes.get(key) === probe) runtimeProbes.delete(key)
+  }
+}
+
 /** The current verdict per switch, in the section's row order. */
 export function healthReport(): readonly SwitchHealth[] {
-  return PROBES.map(({ key, targets, region }) => {
+  const rows: SwitchHealth[] = PROBES.map(({ key, targets, region }) => {
     if (targets.some(target => seenTargets.has(target))) return { key, state: 'ok' }
     return { key, state: seenRegions.has(region) ? 'broken' : 'unknown' }
   })
+  for (const [key, probe] of runtimeProbes) rows.push({ key, state: probe() })
+  return rows
 }
 
 /** Forget everything recorded so far; the tests and a full reload both start here. */

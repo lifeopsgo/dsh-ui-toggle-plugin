@@ -4,6 +4,19 @@ All notable changes to this project are documented here.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-11-25
+
+### Added
+
+- **隐藏命令菜单里的「反馈」/ Hide the Feedback command.** The `/` menu listed `feedback` between 计划 and 压缩. The shell builds that menu inside the command service: the slash source awaits `commandUi.directory.ensureReady()` and turns every descriptor into a row, and a pick resolves the descriptor again through `directory.resolve()`. The service publishes no filter, and a client contribution may not shadow a Host name — the shell throws on the collision — so the plugin filters the list where the directory hands it out. The row and its keyboard highlight disappear together, leaving no invisible row arrow keys could land on; a typed `/feedback` still runs, because `resolve()` is untouched.
+- A runtime probe for that switch: `commandFilterState()` reports `ok` once the wrapper is bound and `broken` when the shell publishes a command service this plugin cannot wrap, so the same Settings warning covers an upgrade that moves the directory seam.
+- `test/command-menu.test.ts`: the hidden set per switch, that an off switch returns the same array (no copy), that the wrapper reads prefs on every call, and that a missing directory reports `broken` rather than silence.
+
+### Changed
+
+- `UiPrefs` gains `hideFeedbackCommand` (off by default); the Section now renders eight rows.
+- zh/en copy for the new row, and the READMEs count eight switches.
+
 ## [1.3.0] - 2026-11-20
 
 ### Added

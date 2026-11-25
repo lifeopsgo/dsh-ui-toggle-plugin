@@ -11,8 +11,9 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'node:test'
 
-import { PROBES, healthReport, resetHealth, scanHealth } from '../src/client/health.ts'
+import { PROBES, healthReport, registerRuntimeProbe, resetHealth, scanHealth } from '../src/client/health.ts'
 import type { HealthRoot } from '../src/client/health.ts'
+import { HIDEABLE_COMMANDS } from '../src/client/command-menu.ts'
 import { DEFAULT_PREFS } from '../src/client/prefs.ts'
 
 const chromeSource = (): string => readFileSync(new URL('../src/client/chrome.ts', import.meta.url), 'utf8')
@@ -26,9 +27,24 @@ const stateOf = (key: string): string => healthReport().find(row => row.key === 
 
 describe('the probe table', () => {
   test('covers every switch exactly once', () => {
-    const keys = PROBES.map(probe => probe.key)
+    // Two probe kinds: a DOM anchor (most switches) and a runtime check for a
+    // switch whose effect is a service wrapper rather than a node.
+    const keys = [...PROBES.map(probe => probe.key), ...HIDEABLE_COMMANDS.map(family => family.key)]
     assert.deepEqual([...keys].sort(), Object.keys(DEFAULT_PREFS).sort(), 'every pref needs one probe, no extras')
     assert.equal(new Set(keys).size, keys.length, 'one probe per switch')
+  })
+
+  test('a runtime probe answers for its switch and wins over the DOM bookkeeping', () => {
+    resetHealth()
+    const dispose = registerRuntimeProbe('hideFeedbackCommand', () => 'broken')
+    try {
+      assert.equal(stateOf('hideFeedbackCommand'), 'broken')
+      assert.equal(healthReport().filter(row => row.key === 'hideFeedbackCommand').length, 1, 'one row per switch')
+    } finally {
+      dispose()
+      resetHealth()
+    }
+    assert.equal(healthReport().some(row => row.key === 'hideFeedbackCommand'), false, 'the disposer removes the probe')
   })
 
   test('anchors on stable hooks, never on hashed classes or copy', () => {

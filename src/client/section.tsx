@@ -1,5 +1,5 @@
 /**
- * The Settings section page: one heading, one intro line, and the seven chrome
+ * The Settings section page: one heading, one intro line, and the chrome
  * switches as labelled rows. The section mounts only while its nav row is
  * active, but reads the prefs fresh on every mount, so it always shows what
  * the chrome effects currently apply. A flip updates the local state
@@ -39,6 +39,7 @@ const SWITCHES: readonly SwitchRowSpec[] = [
   { key: 'hideSidebarToggle', cls: 'hidesidebartoggle', labelKey: 'prefs.sidebartoggle', hintKey: 'prefs.sidebartoggle.hint' },
   { key: 'hideInputPlaceholder', cls: 'hideinputplaceholder', labelKey: 'prefs.inputplaceholder', hintKey: 'prefs.inputplaceholder.hint' },
   { key: 'hidePermissionLabel', cls: 'hidepermissionlabel', labelKey: 'prefs.permission', hintKey: 'prefs.permission.hint' },
+  { key: 'hideFeedbackCommand', cls: 'hidefeedback', labelKey: 'prefs.feedback', hintKey: 'prefs.feedback.hint' },
 ]
 
 const passthrough: Translate = key => key

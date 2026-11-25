@@ -14,7 +14,7 @@
 
 ## What it is
 
-A **DeepSeek Harness (DSH) WebUI** plugin that adds one Settings section, **UI toggle**, holding seven switches over the shell's own chrome:
+A **DeepSeek Harness (DSH) WebUI** plugin that adds one Settings section, **UI toggle**, holding eight switches over the shell's own chrome:
 
 | Switch | Effect |
 | :-- | :-- |
@@ -25,6 +25,7 @@ A **DeepSeek Harness (DSH) WebUI** plugin that adds one Settings section, **UI t
 | **Hide the collapse-sidebar button** | Hides the sidebar collapse/expand button; its shortcut still toggles the sidebar. The logo row has a shell-fixed height, so once its switches empty it — brand + toggle in wide state, the toggle alone in the rail — the row itself collapses instead of leaving a blank strip. |
 | **Hide the input placeholder** | Hides the hint text the empty composer shows. The shell renders it as an aria-hidden div carrying the stable `data-composer-placeholder` attribute (its single occurrence framework-wide), so the rule anchors on the attribute, never the copy. Typing is unaffected and the editable keeps its aria-label. |
 | **Self-check for broken switches** | The plugin watches the shell anchors every switch depends on. When a DSH upgrade changes that markup, the switch list grows a warning block that names the switches that no longer work, and each of those rows carries a "broken" badge. Switches whose screen has not been opened yet (the composer before any conversation) report "unknown" rather than failing. |
+| **Hide the Feedback command** | Drops the feedback row from the `/` command menu. The shell renders that menu from the command directory, and the service publishes no filter, so the plugin filters `feedback` where the directory hands its list out: the row and its keyboard highlight disappear together, leaving no invisible row arrow keys could land on. Typing `/feedback` still runs it — the switch hides the menu row, not the command. |
 | **Show only the permission icon** | Hides the preset name on the permission selector under the composer ("Full access", "Workspace write" and the others), leaving the shield glyph and the dropdown chevron. The button keeps its aria-label, and the selector still opens and switches normally. |
 
 Every switch applies **immediately** — no reload — and persists in this browser's `localStorage`.
@@ -35,8 +36,8 @@ The peer range `>=0.2.0-0 <0.3.0-0` admits **every DSH 0.2.x release** (pre-rele
 
 | DSH version | Status | How it was checked |
 | --- | --- | --- |
-| 0.2.2-rc.3 | supported | Typechecks (host + client), production build, 37 automated tests, `--frozen-lockfile` install, plus a per-surface contract check against the installed 0.2.2-rc.3 packages (slot keys, the negative-priority shadow mechanism, the launcher owner share, section props, CSS anchors, locale service signatures); the upgrade guides from 0.2.1-rc.5 to 0.2.2-rc.3 contain no break touching this plugin's surfaces |
-| 0.2.1-rc.2 | supported | Typechecks (host + client), production build, 37 automated tests, `--frozen-lockfile` install, and end-to-end browser verification of the switches against a live WebUI |
+| 0.2.2-rc.3 | supported | Typechecks (host + client), production build, 57 automated tests, `--frozen-lockfile` install, plus a per-surface contract check against the installed 0.2.2-rc.3 packages (slot keys, the negative-priority shadow mechanism, the launcher owner share, section props, CSS anchors, locale service signatures); the upgrade guides from 0.2.1-rc.5 to 0.2.2-rc.3 contain no break touching this plugin's surfaces |
+| 0.2.1-rc.2 | supported | Typechecks (host + client), production build, 57 automated tests, `--frozen-lockfile` install, and end-to-end browser verification of the switches against a live WebUI |
 
 This release makes no compatibility claim for DSH versions outside 0.2.x.
 

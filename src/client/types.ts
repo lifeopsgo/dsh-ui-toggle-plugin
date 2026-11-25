@@ -29,6 +29,13 @@ export type Translate = (key: string, params?: Record<string, string | number>) 
  */
 export interface ClientContext {
   effect(factory: () => (() => void) | void, label?: string): () => void
+  /**
+   * Wait for the named services, then run the callback against a scope that
+   * owns them; the callback's effects ride that scope. Optional services use
+   * this instead of a top-level `inject`, so the plugin still loads when the
+   * shell does not ship them.
+   */
+  inject(services: readonly string[], callback: (scope: ClientContext) => void): () => void
   readonly slots: {
     inject(key: string, callback: () => (() => void) | void): () => void
     register(spec: SlotSpec, component: SlotComponent): () => void

@@ -21,7 +21,8 @@ import { NS, dictionaries } from './locales.ts'
 import { seedFromLegacyPrefs, readPrefs, onPrefsChanged } from './prefs.ts'
 import { injectStyles } from './styles.ts'
 import { installChrome } from './chrome.ts'
-import { observeHealth } from './health.ts'
+import { observeHealth, registerRuntimeProbe } from './health.ts'
+import { commandFilterState, installCommandFilter } from './command-menu.ts'
 import { UiToggleSection } from './section.tsx'
 import type { ClientContext, SlotComponent } from './types.ts'
 
@@ -41,6 +42,10 @@ export function apply(ctx: ClientContext): void {
   // Watches the anchors the switches act on, so the Settings section can tell a
   // switch that merely looks inert from one the shell's new markup broke.
   ctx.effect(() => observeHealth(document), 'ui-toggle: health probe')
+  // The feedback switch hides a Host command row rather than a DOM node, so its
+  // verdict comes from the wrapper instead of an anchor scan.
+  ctx.effect(() => registerRuntimeProbe('hideFeedbackCommand', commandFilterState), 'ui-toggle: command filter probe')
+  installCommandFilter(ctx, readPrefs)
   const t = ctx.locale.bind(NS)
   ctx.slots.inject('settings.section', () =>
     ctx.slots.register(
